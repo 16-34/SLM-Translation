@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 import { Translator } from "./translation";
 
-let isEnabled = true;
+let isEnabled: boolean = true;
 let t: Translator = new Translator("qwen2.5:1.5b");
 
-async function handleSelectTextHover(
+async function translateSelectTextHover(
     document: vscode.TextDocument,
     position: vscode.Position
 ) {
@@ -28,18 +28,92 @@ async function handleSelectTextHover(
     }
 }
 
+async function translateSelectText() {
+    if (!isEnabled) return;
+    const editor = vscode.window.activeTextEditor;
+    const selection = editor?.selection;
+
+    if (!editor || !selection) return;
+
+    const range = new vscode.Range(selection.start, selection.end);
+    const decorationType = vscode.window.createTextEditorDecorationType({
+        color: "red",
+        fontWeight: "bold",
+    });
+
+    editor.setDecorations(decorationType, [range]);
+
+    if (!editor || !selection) return;
+    const text = editor.document.getText(selection);
+    if (text) {
+        const translatedText = await t.translate(text);
+        editor
+            .edit((editBuilder) => {
+                editBuilder.replace(selection, translatedText);
+            })
+            .then(() => {
+                // Restore to its original state
+                editor.setDecorations(decorationType, []); // Clear the decoration
+            });
+    }
+}
+
+async function namingSelectText() {
+    if (!isEnabled) return;
+    const editor = vscode.window.activeTextEditor;
+    const selection = editor?.selection;
+
+    if (!editor || !selection) return;
+
+    const range = new vscode.Range(selection.start, selection.end);
+    const decorationType = vscode.window.createTextEditorDecorationType({
+        color: "blue",
+        fontWeight: "bold",
+    });
+
+    editor.setDecorations(decorationType, [range]);
+
+    if (!editor || !selection) return;
+    const text = editor.document.getText(selection);
+    if (text) {
+        const translatedText = await t.name(text);
+        editor
+            .edit((editBuilder) => {
+                editBuilder.replace(selection, translatedText);
+            })
+            .then(() => {
+                editor.setDecorations(decorationType, []);
+            });
+    }
+}
+
 export function activate(context: vscode.ExtensionContext) {
     console.log("active");
 
     // Registering the hover event
     vscode.languages.registerHoverProvider("*", {
-        provideHover: handleSelectTextHover,
+        provideHover: translateSelectTextHover,
     });
+
+    // Naming function
+    let naming = vscode.commands.registerCommand(
+        "slm-translation.naming",
+        async () => {
+            await namingSelectText();
+        }
+    );
+
+    let translate = vscode.commands.registerCommand(
+        "slm-translation.translate",
+        async () => {
+            await translateSelectText();
+        }
+    );
 
     let disable = vscode.commands.registerCommand(
         "slm-translation.disable",
         () => {
-            vscode.window.showInformationMessage("翻译功能已关闭");
+            vscode.window.showInformationMessage("SLM-Translation 已禁用");
             isEnabled = false;
         }
     );
@@ -47,12 +121,12 @@ export function activate(context: vscode.ExtensionContext) {
     let enable = vscode.commands.registerCommand(
         "slm-translation.enable",
         () => {
-            vscode.window.showInformationMessage("翻译功能已开启");
+            vscode.window.showInformationMessage("SLM-Translation 已启用");
             isEnabled = true;
         }
     );
 
-    context.subscriptions.push(disable, enable);
+    context.subscriptions.push(disable, enable, naming, translate);
 }
 
 export function deactivate() {}

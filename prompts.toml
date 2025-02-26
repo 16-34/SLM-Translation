@@ -1,5 +1,5 @@
 
-[TRANSLATION]
+[TRANSLATE]
 SYSTEM_ZH = '''你的任务是将英文文本准确地翻译成中文。
 在翻译过程中，请注意以下几点：
     1. 确保译文忠实于原文意思，不遗漏任何重要信息；
@@ -33,4 +33,29 @@ harnessing the full potential of this transformative technology.''' },
 方式。从自动驾驶汽车到个性化医疗保健，人工智能已成为我们日常生活不可或缺的一
 部分。然而，这些进步也引发了许多关于伦理、隐私和就业未来的重要问题。随着人工
 智能的不断发展，社会需要在利用其革命性潜力的同时，解决这些挑战。''' },
+]
+
+[NAME]
+SYSTEM_ZH='''你的任务是根据用户提供的功能描述，为变量、函数或类生成一个合适的名称。
+命名要求如下：
+    - 名称应简洁、直观，并能够准确反映其功能和用途。
+    - 请确保命名符合编程规范，避免使用模糊或过于宽泛的术语。
+    - 变量采用蛇形命名法，函数采用小驼峰命名法，类采用大驼峰命名法。
+完成后，仅输出最终命名标识符，不包含任何其他符号或信息。'''
+
+SYSTEM_EN='''Your task is to generate appropriate names for variables, functions, or classes based on the functional descriptions provided. The naming requirements are as follows:
+    - The names should be concise, intuitive, and accurately reflect their functions and purposes.
+    - Ensure that the names comply with programming conventions, avoiding ambiguous or overly broad terms.
+    - Variables should use snake_case naming, functions should use camelCase naming, and classes should use PascalCase naming.
+After completion, only output the final names without any additional information.'''
+
+EXAMPLE = [
+    { "role" = "user", "content" = '''存储任务的状态信息的变量，用于跟踪任务的执行进度'''},
+    { "role" = "assistant", content = '''task_status'''},
+
+    { "role" = "user", "content" = '''计算一组数字的平均值的函数'''},
+    { "role" = "assistant", content = '''calculateAverage'''},
+
+    { "role" = "user", "content" = '''用于管理用户认证的类，包括登录、登出和密码重置等功能'''},
+    { "role" = "assistant", content = '''UserAuthManager'''},    
 ]

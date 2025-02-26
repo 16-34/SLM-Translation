@@ -1,7 +1,9 @@
 {
     "name": "slm-translation",
     "displayName": "SLM-Translation",
-    "description": "",
+    "description": "Translating in VSCode with small language models.",
+    "publisher": "Lue Jiang",
+    "icon": "icon.png",
     "version": "0.0.1",
     "engines": {
         "vscode": "^1.97.0"
@@ -18,12 +20,36 @@
             {
                 "command": "slm-translation.enable",
                 "category": "SLM-Translation",
-                "title": "Enable Translate"
+                "title": "Enable"
             },
             {
                 "command": "slm-translation.disable",
                 "category": "SLM-Translation",
-                "title": "Disable Translate"
+                "title": "Disable"
+            },
+            {
+                "command": "slm-translation.naming",
+                "category": "SLM-Translation",
+                "title": "Naming"
+            },
+            {
+                "command": "slm-translation.translate",
+                "category": "SLM-Translation",
+                "title": "Translate"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "slm-translation.naming",
+                "key": "shift+alt+n",
+                "mac": "shift+alt+n",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "slm-translation.translate",
+                "key": "shift+alt+t",
+                "mac": "shift+alt+t",
+                "when": "editorTextFocus"
             }
         ]
     },
