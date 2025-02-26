@@ -1,5 +1,7 @@
 # SLM-Translation: 在 VSCODE 中使用 SLM 进行翻译
 
+![example](example.gif)
+
 ## 如何使用
 
 -   **启用插件功能**：在命令面板中输入`SLM-Translation: Enable`

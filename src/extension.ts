@@ -100,11 +100,15 @@ function getWebviewContent(content: string) {
         h1 {
             color: #333;
         }
+        
+        div > p {
+            font-size: 18px;
+        }
     </style>
 </head>
 
 <body>
-    ${content}
+    <div class="content">${content}</div>
 </body>
 
 </html>`;

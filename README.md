@@ -1,5 +1,7 @@
 # SLM-Translation: Translation using SLM in VSCODE
 
+![example](example.gif)
+
 [中文文档](README_ZH.md)
 
 ## How to use
