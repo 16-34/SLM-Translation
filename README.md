@@ -1,7 +1,5 @@
 # SLM-Translation: Translation using SLM in VSCODE
 
-![icon](icon.png)
-
 [中文文档](README_ZH.md)
 
 ## How to use

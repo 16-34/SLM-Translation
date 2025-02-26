@@ -5,6 +5,10 @@
     "publisher": "Lue Jiang",
     "icon": "icon.png",
     "version": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/16-34/SLM-Translation"
+    },
     "engines": {
         "vscode": "^1.97.0"
     },
