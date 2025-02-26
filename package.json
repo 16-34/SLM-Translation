@@ -40,6 +40,11 @@
                 "command": "slm-translation.translate",
                 "category": "SLM-Translation",
                 "title": "Translate"
+            },
+            {
+                "command": "slm-translation.translateOnPanel",
+                "category": "SLM-Translation",
+                "title": "Translate on Panel"
             }
         ],
         "keybindings": [
@@ -78,6 +83,7 @@
     },
     "dependencies": {
         "@iarna/toml": "^2.2.5",
+        "marked": "^15.0.7",
         "ollama": "^0.5.14"
     }
 }

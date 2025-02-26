@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { Translator } from "./translation";
+import * as marked from "marked";
 
 let isEnabled: boolean = true;
 let t: Translator = new Translator("qwen2.5:1.5b");
@@ -9,16 +10,14 @@ async function translateSelectTextHover(
     position: vscode.Position
 ) {
     if (!isEnabled) return;
+
     const editor = vscode.window.activeTextEditor;
     const selection = editor?.selection;
 
     if (!editor || !selection || !selection.contains(position)) return;
     const text = editor.document.getText(selection);
     if (text) {
-        console.log(text);
-        let content = (await t.translate(text)) as any;
-        console.log(content);
-        console.log("----------------------------------------------------");
+        let content = await t.translate(text);
 
         const markdownString = new vscode.MarkdownString();
         markdownString.appendMarkdown(content);
@@ -30,6 +29,7 @@ async function translateSelectTextHover(
 
 async function translateSelectText() {
     if (!isEnabled) return;
+
     const editor = vscode.window.activeTextEditor;
     const selection = editor?.selection;
 
@@ -56,6 +56,58 @@ async function translateSelectText() {
                 editor.setDecorations(decorationType, []); // Clear the decoration
             });
     }
+}
+
+async function translateOnPanel() {
+    if (!isEnabled) return;
+
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) return;
+
+    const document = editor.document;
+    const fullText = document.getText();
+
+    const panel = vscode.window.createWebviewPanel(
+        "slm-translation_panel",
+        "SLM Translation",
+        vscode.ViewColumn.Beside,
+        {
+            enableScripts: true,
+            retainContextWhenHidden: true,
+        }
+    );
+
+    let content = await t.translate(fullText);
+    let htmlContent = await marked.parse(content);
+    console.log(htmlContent)
+    panel.webview.html = getWebviewContent(htmlContent);
+}
+
+function getWebviewContent(content: string) {
+    return `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    ${content}
+</body>
+
+</html>`;
 }
 
 async function namingSelectText() {
@@ -109,6 +161,15 @@ export function activate(context: vscode.ExtensionContext) {
             await translateSelectText();
         }
     );
+
+    let disposable = vscode.commands.registerCommand(
+        "slm-translation.translateOnPanel",
+        async () => {
+            await translateOnPanel();
+        }
+    );
+
+    context.subscriptions.push(disposable);
 
     let disable = vscode.commands.registerCommand(
         "slm-translation.disable",

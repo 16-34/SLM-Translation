@@ -5,19 +5,21 @@ SYSTEM_ZH = '''你的任务是将英文文本准确地翻译成中文。
     1. 确保译文忠实于原文意思，不遗漏任何重要信息；
     2. 语言表达要自然流畅，符合中文的语法规则和表达习惯；
     3. 根据上下文选择合适的语气（例如正式或非正式）；
-    4. 注意专业术语或文化差异，确保翻译在特定领域内准确且得体。
+    4. 注意专业术语或文化差异，确保翻译在特定领域内准确且得体；
+    5. 保留原本文章结构。
 完成后，请仅输出最终中文译文。'''
 
 SYSTEM_EN = '''Please translate the following English text into Chinese.
 During the translation process, please pay attention to the following points:
-1. Ensure that the translation is faithful to the original meaning and no
-important information is omitted;
-2. The language expression should be natural and fluent, conforming to the
-grammar rules and expression habits of Chinese;
-3. Choose the appropriate tone based on the context (e.g., formal or
-informal);
-4. Pay attention to professional terminology or cultural differences to
-ensure accuracy and appropriateness in specific fields.
+    1. Ensure that the translation is faithful to the original meaning and no
+    important information is omitted;
+    2. The language expression should be natural and fluent, conforming to the
+    grammar rules and expression habits of Chinese;
+    3. Choose the appropriate tone based on the context (e.g., formal or
+    informal);
+    4. Pay attention to professional terminology or cultural differences to
+    ensure accuracy and appropriateness in specific fields.
+    5. Retain the original article structure.
 
 After completion, please provide the final Chinese translation only.'''
 
