@@ -2,6 +2,8 @@
 
 ![icon](icon.png)
 
+[中文文档](README_ZH.md)
+
 ## How to use
 
 -   **Enable plugin function**: Enter `SLM-Translation: Enable` in the command panel
