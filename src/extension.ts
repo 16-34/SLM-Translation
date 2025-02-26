@@ -1,26 +1,58 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import { Translator } from "./translation";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+let isEnabled = true;
+let t: Translator = new Translator("qwen2.5:1.5b");
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "slm-translation" is now active!');
+async function handleSelectTextHover(
+    document: vscode.TextDocument,
+    position: vscode.Position
+) {
+    if (!isEnabled) return;
+    const editor = vscode.window.activeTextEditor;
+    const selection = editor?.selection;
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('slm-translation.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from SLM-Translation!');
-	});
+    if (!editor || !selection || !selection.contains(position)) return;
+    const text = editor.document.getText(selection);
+    if (text) {
+        console.log(text);
+        let content = (await t.translate(text)) as any;
+        console.log(content);
+        console.log("----------------------------------------------------");
 
-	context.subscriptions.push(disposable);
+        const markdownString = new vscode.MarkdownString();
+        markdownString.appendMarkdown(content);
+        markdownString.supportHtml = true;
+        markdownString.isTrusted = true;
+        return new vscode.Hover(markdownString);
+    }
 }
 
-// This method is called when your extension is deactivated
+export function activate(context: vscode.ExtensionContext) {
+    console.log("active");
+
+    // Registering the hover event
+    vscode.languages.registerHoverProvider("*", {
+        provideHover: handleSelectTextHover,
+    });
+
+    let disable = vscode.commands.registerCommand(
+        "slm-translation.disable",
+        () => {
+            vscode.window.showInformationMessage("翻译功能已关闭");
+            isEnabled = false;
+        }
+    );
+
+    let enable = vscode.commands.registerCommand(
+        "slm-translation.enable",
+        () => {
+            vscode.window.showInformationMessage("翻译功能已开启");
+            isEnabled = true;
+        }
+    );
+
+    context.subscriptions.push(disable, enable);
+}
+
 export function deactivate() {}
