@@ -2,7 +2,7 @@
     "name": "slm-translation",
     "displayName": "SLM-Translation",
     "description": "Translating in VSCode with small language models.",
-    "publisher": "Lue Jiang",
+    "publisher": "LueJiang",
     "icon": "icon.png",
     "version": "0.1.1",
     "repository": {
