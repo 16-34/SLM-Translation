@@ -4,13 +4,13 @@
     "description": "Translating in VSCode with small language models.",
     "publisher": "Lue Jiang",
     "icon": "icon.png",
-    "version": "0.0.1",
+    "version": "0.1.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/16-34/SLM-Translation"
     },
     "engines": {
-        "vscode": "^1.97.0"
+        "vscode": "^1.90.0"
     },
     "categories": [
         "Other"
@@ -30,6 +30,7 @@
                 "command": "slm-translation.disable",
                 "category": "SLM-Translation",
                 "title": "Disable"
+                
             },
             {
                 "command": "slm-translation.naming",
@@ -42,9 +43,24 @@
                 "title": "Translate"
             },
             {
+                "command": "slm-translation.clearCache",
+                "category": "SLM-Translation",
+                "title": "Clear Cache"
+            },
+            {
                 "command": "slm-translation.translateOnPanel",
                 "category": "SLM-Translation",
                 "title": "Translate on Panel"
+            },
+            {
+                "command": "slm-translation.changeLanguage",
+                "category": "SLM-Translation",
+                "title": "Change Language"
+            },
+            {
+                "command": "slm-translation.changeModel",
+                "category": "SLM-Translation",
+                "title": "Change Model"
             }
         ],
         "keybindings": [
@@ -60,7 +76,32 @@
                 "mac": "shift+alt+t",
                 "when": "editorTextFocus"
             }
-        ]
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "SLM-Translation",
+            "properties": {
+                "slm-translation.Ollama Host": {
+                    "type": "string",
+                    "default": "http://localhost:11434",
+                    "description": "OLLAMA 服务地址"
+                },
+                "slm-translation.Model": {
+                    "type": "string",
+                    "default": "qwen2.5:1.5b",
+                    "description": "SLM 模型名称"
+                },
+                "slm-translation.Target Language": {
+                    "type": "string",
+                    "enum": [
+                        "简体中文",
+                        "English"
+                    ],
+                    "default": "简体中文",
+                    "description": "翻译目标语言"
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
@@ -73,7 +114,7 @@
     "devDependencies": {
         "@types/mocha": "^10.0.10",
         "@types/node": "20.x",
-        "@types/vscode": "^1.97.0",
+        "@types/vscode": "^1.90.0",
         "@typescript-eslint/eslint-plugin": "^8.22.0",
         "@typescript-eslint/parser": "^8.22.0",
         "@vscode/test-cli": "^0.0.10",

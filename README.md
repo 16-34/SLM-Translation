@@ -1,29 +1,36 @@
-# SLM-Translation: Translation using SLM in VSCODE
+# SLM-Translation: 在 VSCODE 中使用 SLM 进行翻译
 
 ![example](example.gif)
 
-[中文文档](README_ZH.md)
+[English Docs](README_EN.md)
 
-## How to use
+[Github 仓库](https://github.com/16-34/SLM-Translation)
 
--   **Enable plugin function**: Enter `SLM-Translation: Enable` in the command panel
--   **Disable plugin function**: Enter `SLM-Translation: Disable` in the command panel
--   **Translate selected text**: After selecting the text to be translated, press the shortcut key `shift` + `alt` + `t` or enter `SLM-Translation: Translate` in the command panel
--   **Show Translation in Panel**: Enter `SLM-Translation: Translate on Panel` in the command panel.
--   **Name according to description**: After selecting the description text, press the shortcut key `shift` + `alt` + `n` or enter `SLM-Translation: Naming` in the command panel
+## 如何使用
 
-## Requirements
+在确保 ollama 配置正确且正常运行后：
 
-Deploy `ollama` locally and pull the `qwen2.5:1.5b` model
+-   **悬停翻译**：选中待翻译文本后，将鼠标悬停在选中部分上
+-   **选中翻译**：选中待翻译文本后，按下快捷键`shift` + `alt` + `t` 或在命令面板中输入`SLM-Translation: Translate`
+-   **命名建议**：选中描述文本后，按下快捷键`shift` + `alt` + `n` 或在命令面板中输入`SLM-Translation: Naming`
+-   **在面板中显示对照翻译**：在命令面板中输入`SLM-Translation: Translate on Panel`
 
-> Currently it is a demo version, and only this model support is available for the time being
+| 命令                                  |                                  |
+| ------------------------------------- | -------------------------------- |
+| `SLM-Translation: Enable`             | 启用功能                         |
+| `SLM-Translation: Disable`            | 禁用功能                         |
+| `SLM-Translation: Translate`          | 翻译选中文本                     |
+| `SLM-Translation: Translate on Panel` | 在面板中显示当前活动文本对照翻译 |
+| `SLM-Translation: Naming`             | 根据描述（选中文本）提供命名建议 |
+| `SLM-Translation: Clear Cache`        | 清除当前语言缓存                 |
+| `SLM-Translation: Change Language`    | 切换目标语言                     |
+| `SLM-Translation: Change Model`       | 切换 SLM 模型                    |
 
-## Release Notes
+| 快捷键                |          |
+| --------------------- | -------- |
+| `shift` + `alt` + `t` | 选中翻译 |
+| `shift` + `alt` + `n` | 命名建议 |
 
-### 0.0.1
+## 要求
 
-The demo version implements the following core functions:
-
--   Translate selected text
--   Translate the entire document with side-by-side comparison in the panel.
--   Provide variables, functions, and class identifier suggestions based on the description
+code 版本 `>=1.90.0`

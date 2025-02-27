@@ -1,13 +1,26 @@
 # Change Log
 
-All notable changes to the "slm-translation" extension will be documented in this file.
+所有显著的更改都将记录在此文件中。
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## [0.1.1] - 2025-02-27
 
-## [Unreleased] - 2025-02-26
+### 新增
 
-### Added
+-   添加插件配置
+-   支持配置 ollama 服务与 SLM 模型
+-   支持切换目标语言
+-   清除当前语言翻译缓存功能
 
--   v1.1 Translate selected text
--   v1.1 Translate the entire document with side-by-side comparison in the panel.
--   v1.1 Provide variables, functions, and class identifier suggestions based on the description
+### 变更
+
+-   将项目文档修改为中文
+
+## [0.0.1] - 2025-02-26
+
+### 新增
+
+-   创建项目结构
+-   翻译选中文本功能
+-   缓存翻译内容功能
+-   根据描述提供变量、函数和类标识符建议功能
+-   在面板中并排比较翻译功能

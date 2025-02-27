@@ -16,27 +16,30 @@ export class Cache {
         this.cacheSize = 0;
         this.maxCacheSize = maxCacheSize;
     }
-    
+
     get(key: string): CacheValue | undefined {
         return this.cacheData.get(key);
     }
 
     set(key: string, value: CacheValue) {
-        console.log("set", key, value);
         this.cacheData.set(key, value);
         this.cacheSize += Buffer.byteLength(value.content);
         this.manageCache();
     }
 
     delete(key: string) {
-        console.log("delete", key);
         this.cacheSize -= Buffer.byteLength(
             this.cacheData.get(key)?.content || ""
         );
         this.cacheData.delete(key);
     }
 
-    /** Clean up older records when cache is too large */ 
+    clear() {
+        this.cacheData.clear();
+        this.cacheSize = 0;
+    }
+
+    /** Clean up older records when cache is too large */
     private manageCache() {
         if (this.cacheSize > this.maxCacheSize) {
             const keys = Array.from(this.cacheData.keys());

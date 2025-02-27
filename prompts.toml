@@ -1,5 +1,5 @@
 
-[TRANSLATE]
+[TRANSLATE-ZH_CN]
 SYSTEM_ZH = '''你的任务是将英文文本准确地翻译成中文。
 在翻译过程中，请注意以下几点：
     1. 确保译文忠实于原文意思，不遗漏任何重要信息；
@@ -37,27 +37,37 @@ harnessing the full potential of this transformative technology.''' },
 智能的不断发展，社会需要在利用其革命性潜力的同时，解决这些挑战。''' },
 ]
 
+[TRANSLATE-EN]
+SYSTEM_ZH = '''你是一个擅长将中文翻译为英文的高级语言模型。你的任务是将给定的中文文本准确、自然地翻译成英文，确保翻译内容保留原文意义，同时符合英语的语法、句式和表达习惯。注意语境、习语和细微差别，以提供高质量的翻译。'''
+
+SYSTEM_EN = '''You are a highly capable language model specialized in translating Chinese to English. Your task is to provide an accurate and natural translation of the given Chinese text into English, ensuring that the meaning is preserved while maintaining proper grammar, syntax, and fluency. Pay attention to context, idiomatic expressions, and nuances to deliver a high-quality translation.'''
+
+EXAMPLE = [
+    { "role" = "user", "content" = '''在中国的传统文化中，春节是最重要的节日之一。它象征着团圆和新的开始，人们通常会在这个时候与家人团聚，享受丰盛的年夜饭，并燃放烟花庆祝。''' },
+    { "role" = "assistant", content = '''In China's traditional culture, the Spring Festival is one of the most important holidays. It symbolizes reunion and a fresh start. People usually gather with their families during this time, enjoy a sumptuous New Year's Eve dinner, and celebrate by setting off fireworks.''' },
+]
+
 [NAME]
-SYSTEM_ZH='''你的任务是根据用户提供的功能描述，为变量、函数或类生成一个合适的名称。
+SYSTEM_ZH = '''你的任务是根据用户提供的功能描述，为变量、函数或类生成一个合适的名称。
 命名要求如下：
     - 名称应简洁、直观，并能够准确反映其功能和用途。
     - 请确保命名符合编程规范，避免使用模糊或过于宽泛的术语。
     - 变量采用蛇形命名法，函数采用小驼峰命名法，类采用大驼峰命名法。
 完成后，仅输出最终命名标识符，不包含任何其他符号或信息。'''
 
-SYSTEM_EN='''Your task is to generate appropriate names for variables, functions, or classes based on the functional descriptions provided. The naming requirements are as follows:
+SYSTEM_EN = '''Your task is to generate appropriate names for variables, functions, or classes based on the functional descriptions provided. The naming requirements are as follows:
     - The names should be concise, intuitive, and accurately reflect their functions and purposes.
     - Ensure that the names comply with programming conventions, avoiding ambiguous or overly broad terms.
     - Variables should use snake_case naming, functions should use camelCase naming, and classes should use PascalCase naming.
 After completion, only output the final names without any additional information.'''
 
 EXAMPLE = [
-    { "role" = "user", "content" = '''存储任务的状态信息的变量，用于跟踪任务的执行进度'''},
-    { "role" = "assistant", content = '''task_status'''},
+    { "role" = "user", "content" = '''存储任务的状态信息的变量，用于跟踪任务的执行进度''' },
+    { "role" = "assistant", content = '''task_status''' },
 
-    { "role" = "user", "content" = '''计算一组数字的平均值的函数'''},
-    { "role" = "assistant", content = '''calculateAverage'''},
+    { "role" = "user", "content" = '''计算一组数字的平均值的函数''' },
+    { "role" = "assistant", content = '''calculateAverage''' },
 
-    { "role" = "user", "content" = '''用于管理用户认证的类，包括登录、登出和密码重置等功能'''},
-    { "role" = "assistant", content = '''UserAuthManager'''},    
+    { "role" = "user", "content" = '''用于管理用户认证的类，包括登录、登出和密码重置等功能''' },
+    { "role" = "assistant", content = '''UserAuthManager''' },
 ]
