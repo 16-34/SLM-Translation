@@ -197,7 +197,13 @@ async function translateOnPanel() {
         }
     );
 
-    let content = await t.translate(fullText);
+    let texts = fullText.split("\n\n").filter((text) => text.trim() !== "");
+
+    let translatedTexts = await Promise.all(
+        texts.map((text) => t.translate(text))
+    );
+
+    let content = translatedTexts.join("\n\n");
     let htmlContent = await marked.parse(content);
     panel.webview.html = getWebviewContent(htmlContent);
 }
