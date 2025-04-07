@@ -4,7 +4,7 @@
     "description": "Translating in VSCode with small language models.",
     "publisher": "LueJiang",
     "icon": "icon.png",
-    "version": "0.1.1",
+    "version": "0.2.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/16-34/SLM-Translation"
@@ -30,7 +30,6 @@
                 "command": "slm-translation.disable",
                 "category": "SLM-Translation",
                 "title": "Disable"
-                
             },
             {
                 "command": "slm-translation.naming",
@@ -58,6 +57,11 @@
                 "title": "Change Language"
             },
             {
+                "command": "slm-translation.changeServe",
+                "category": "SLM-Translation",
+                "title": "Change Serve"
+            },
+            {
                 "command": "slm-translation.changeModel",
                 "category": "SLM-Translation",
                 "title": "Change Model"
@@ -81,15 +85,38 @@
             "type": "object",
             "title": "SLM-Translation",
             "properties": {
+                "slm-translation.LM Serve": {
+                    "type": "string",
+                    "enum": [
+                        "Ollama",
+                        "OpenAI"
+                    ],
+                    "default": "Ollama",
+                    "description": "LLM 服务"
+                },
                 "slm-translation.Ollama Host": {
                     "type": "string",
                     "default": "http://localhost:11434",
                     "description": "OLLAMA 服务地址"
                 },
-                "slm-translation.Model": {
+                "slm-translation.Ollama Model": {
                     "type": "string",
                     "default": "qwen2.5:1.5b",
-                    "description": "SLM 模型名称"
+                    "description": "Ollama 模型名称"
+                },
+                "slm-translation.OpenAI Base URL": {
+                    "type": "string",
+                    "default": "https://api.openai.com/v1",
+                    "description": "OpenAI Base URL"
+                },
+                "slm-translation.OpenAI API Key": {
+                    "type": "string",
+                    "description": "OpenAI API Key"
+                },
+                "slm-translation.OpenAI Model": {
+                    "type": "string",
+                    "default": "gpt-4o-mini",
+                    "description": "OpenAI 模型名称"
                 },
                 "slm-translation.Target Language": {
                     "type": "string",
@@ -125,6 +152,7 @@
     "dependencies": {
         "@iarna/toml": "^2.2.5",
         "marked": "^15.0.7",
-        "ollama": "^0.5.14"
+        "ollama": "^0.5.14",
+        "openai": "^4.91.1"
     }
 }

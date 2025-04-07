@@ -6,7 +6,7 @@ interface CacheValue {
 }
 
 /** Manage the cache of translated content */
-export class Cache {
+export class TranslationCache {
     private cacheData: Map<string, CacheValue>;
     private cacheSize: number;
     private maxCacheSize: number;

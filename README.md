@@ -8,7 +8,7 @@
 
 ## 如何使用
 
-在确保 ollama 配置正确且正常运行后：
+在确保配置正确后：
 
 -   **悬停翻译**：选中待翻译文本后，将鼠标悬停在选中部分上
 -   **选中翻译**：选中待翻译文本后，按下快捷键`shift` + `alt` + `t` 或在命令面板中输入`SLM-Translation: Translate`
@@ -24,7 +24,8 @@
 | `SLM-Translation: Naming`             | 根据描述（选中文本）提供命名建议 |
 | `SLM-Translation: Clear Cache`        | 清除当前语言缓存                 |
 | `SLM-Translation: Change Language`    | 切换目标语言                     |
-| `SLM-Translation: Change Model`       | 切换 SLM 模型                    |
+| `SLM-Translation: Change Serve`       | 切换 LM 服务                    |
+| `SLM-Translation: Change Model`       | 切换 LM 模型                    |
 
 | 快捷键                |          |
 | --------------------- | -------- |

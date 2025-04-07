@@ -6,7 +6,7 @@
 
 ## How to Use
 
-After ensuring that your Ollama configuration is correct and running properly:
+After ensuring that your configuration is correct:
 
 -   **Hover Translation**: Select the text you want to translate, then hover your mouse over the selected part.
 -   **Translate Selection**: Select the text you want to translate, then press the shortcut `shift` + `alt` + `t` or enter `SLM-Translation: Translate` in the command palette.
@@ -22,7 +22,8 @@ After ensuring that your Ollama configuration is correct and running properly:
 | `SLM-Translation: Naming`             | Provide naming suggestions based on the selected text (description) |
 | `SLM-Translation: Clear Cache`        | Clear the current language cache                                    |
 | `SLM-Translation: Change Language`    | Switch the target language                                          |
-| `SLM-Translation: Change Model`       | Switch the SLM model                                                |
+| `SLM-Translation: Change Serve`       | Switch the LM serve                                                 |
+| `SLM-Translation: Change Model`       | Switch the LM model                                                 |
 
 | Shortcut              |                     |
 | --------------------- | ------------------- |

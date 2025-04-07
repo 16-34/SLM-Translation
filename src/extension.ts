@@ -1,6 +1,9 @@
 import * as vscode from "vscode";
-import { Translator } from "./translation";
 import * as marked from "marked";
+
+import { Translator } from "./translator";
+import { OllamaClient } from "./llm/ollama";
+import { OpenaiClient } from "./llm/openai";
 
 let isEnabled: boolean = true;
 let t: Translator;
@@ -14,46 +17,61 @@ export function activate(context: vscode.ExtensionContext) {
     //     })
     // );
 
-    t = new Translator(
-        vscode.workspace
-            .getConfiguration("slm-translation")
-            .get("Model") as string,
-        vscode.workspace
-            .getConfiguration("slm-translation")
-            .get("Ollama Host") as string
-    );
+    let lm_serve = vscode.workspace
+        .getConfiguration("slm-translation")
+        .get("LM Serve");
 
+    if (lm_serve == "Ollama") t = new Translator(new OllamaClient());
+    else if (lm_serve == "OpenAI") t = new Translator(new OpenaiClient());
+
+    // Monitor configuration update
     vscode.workspace.onDidChangeConfiguration((event) => {
-        if (event.affectsConfiguration("slm-translation.Ollama Host")) {
-            t.changeHost(
-                vscode.workspace
-                    .getConfiguration("slm-translation")
-                    .get("Ollama Host") as string
+        let lm_serve = vscode.workspace
+            .getConfiguration("slm-translation")
+            .get("LM Serve");
+
+        if (event.affectsConfiguration("slm-translation.LM Serve")) {
+            if (lm_serve == "Ollama") t.changeServe(new OllamaClient());
+            else if (lm_serve == "OpenAI") t.changeServe(new OpenaiClient());
+            vscode.window.showInformationMessage(
+                `模型服务已切换为 ${lm_serve}`
             );
         }
 
-        if (event.affectsConfiguration("slm-translation.Model")) {
-            t.changeModel(
-                vscode.workspace
-                    .getConfiguration("slm-translation")
-                    .get("Model") as string
+        if (event.affectsConfiguration("slm-translation.LM Serve")) {
+            if (lm_serve == "Ollama") t.changeServe(new OllamaClient());
+            else if (lm_serve == "OpenAI") t.changeServe(new OpenaiClient());
+            vscode.window.showInformationMessage(
+                `模型服务已切换为 ${lm_serve}`
             );
+        }
+
+        if (event.affectsConfiguration(`slm-translation.${lm_serve} Model`)) {
+            let lm = vscode.workspace
+                .getConfiguration("slm-translation")
+                .get(`${lm_serve} Model`) as string;
+            t.changeModel(lm);
+            vscode.window.showInformationMessage(`模型已切换为 ${lm}`);
         }
 
         if (event.affectsConfiguration("slm-translation.Target Language")) {
-            t.changeLanguage(
-                vscode.workspace
-                    .getConfiguration("slm-translation")
-                    .get("Target Language") as string
+            let targetLanguage = vscode.workspace
+                .getConfiguration("slm-translation")
+                .get("Target Language") as string;
+            t.changeLanguage(targetLanguage);
+            vscode.window.showInformationMessage(
+                `目标语言已切换为 ${targetLanguage}`
             );
         }
     });
 
-    // Registering the hover event
+    // EVENT
+    // Select hover
     vscode.languages.registerHoverProvider("*", {
         provideHover: translateSelectTextHover,
     });
 
+    // COMMAND
     let cmdArr = [];
     // Naming function
     cmdArr.push(
@@ -105,9 +123,18 @@ export function activate(context: vscode.ExtensionContext) {
 
     cmdArr.push(
         vscode.commands.registerCommand(
+            "slm-translation.changeServe",
+            async () => {
+                await changeServe();
+            }
+        )
+    );
+
+    cmdArr.push(
+        vscode.commands.registerCommand(
             "slm-translation.changeModel",
             async () => {
-                await changeModel();
+                changeModel();
             }
         )
     );
@@ -252,16 +279,35 @@ function changeLanguage() {
         });
 }
 
-async function changeModel() {
-    const models = await t.getModelList();
+function changeServe() {
     vscode.window
-        .showQuickPick(models, {
-            placeHolder: "选择 SLM 模型",
+        .showQuickPick(["Ollama", "OpenAI"], {
+            placeHolder: "选择 LM 服务",
         })
-        .then((selectedModel) => {
+        .then((selectedServe) => {
             vscode.workspace
                 .getConfiguration("slm-translation")
-                .update("Model", selectedModel, true);
+                .update("LM Serve", selectedServe, true);
+        });
+}
+
+function changeModel() {
+    vscode.window
+        .showInputBox({
+            placeHolder: "请输入 SLM 模型名称",
+            prompt: "选择或输入 SLM 模型",
+            value: "",
+        })
+        .then((model) => {
+            if (model) {
+                let lm_serve = vscode.workspace
+                    .getConfiguration("slm-translation")
+                    .get("LM Serve") as string;
+
+                vscode.workspace
+                    .getConfiguration("slm-translation")
+                    .update(`${lm_serve} Serve`, model, true);
+            }
         });
 }
 
