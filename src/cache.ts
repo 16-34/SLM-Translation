@@ -7,43 +7,43 @@ interface CacheValue {
 
 /** Manage the cache of translated content */
 export class TranslationCache {
-    private cacheData: Map<string, CacheValue>;
-    private cacheSize: number;
-    private maxCacheSize: number;
+    private _cacheData: Map<string, CacheValue>;
+    private _cacheSize: number;
+    private _maxCacheSize: number;
 
     constructor(maxCacheSize: number = 256 * 1024 * 1024) {
-        this.cacheData = new Map();
-        this.cacheSize = 0;
-        this.maxCacheSize = maxCacheSize;
+        this._cacheData = new Map();
+        this._cacheSize = 0;
+        this._maxCacheSize = maxCacheSize;
     }
 
     get(key: string): CacheValue | undefined {
-        return this.cacheData.get(key);
+        return this._cacheData.get(key);
     }
 
     set(key: string, value: CacheValue) {
-        this.cacheData.set(key, value);
-        this.cacheSize += Buffer.byteLength(value.content);
+        this._cacheData.set(key, value);
+        this._cacheSize += Buffer.byteLength(value.content);
         this.manageCache();
     }
 
     delete(key: string) {
-        this.cacheSize -= Buffer.byteLength(
-            this.cacheData.get(key)?.content || ""
+        this._cacheSize -= Buffer.byteLength(
+            this._cacheData.get(key)?.content || ""
         );
-        this.cacheData.delete(key);
+        this._cacheData.delete(key);
     }
 
     clear() {
-        this.cacheData.clear();
-        this.cacheSize = 0;
+        this._cacheData.clear();
+        this._cacheSize = 0;
     }
 
     /** Clean up older records when cache is too large */
     private manageCache() {
-        if (this.cacheSize > this.maxCacheSize) {
-            const keys = Array.from(this.cacheData.keys());
-            while (this.cacheSize > this.maxCacheSize && keys.length > 0) {
+        if (this._cacheSize > this._maxCacheSize) {
+            const keys = Array.from(this._cacheData.keys());
+            while (this._cacheSize > this._maxCacheSize && keys.length > 0) {
                 const oldestKey = keys.shift();
                 if (oldestKey) this.delete(oldestKey);
             }

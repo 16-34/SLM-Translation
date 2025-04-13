@@ -4,12 +4,19 @@ import * as marked from "marked";
 import { Translator } from "./translator";
 import { OllamaClient } from "./llm/ollama";
 import { OpenaiClient } from "./llm/openai";
+import { viewProvider } from "./view";
 
-let isEnabled: boolean = true;
+let isEnabled: boolean = vscode.workspace
+    .getConfiguration("slm-translation")
+    .get("Enable Hover Translate") as boolean;
 let t: Translator;
+let provider: viewProvider;
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log("active");
+    console.log(">> SLM-Translate << is active!");
+
+    provider = new viewProvider(context);
+    vscode.window.registerWebviewViewProvider("slm-translate", provider);
 
     // context.subscriptions.push(
     //     vscode.commands.registerCommand("slm-translation.cmdTest", async () => {
@@ -38,11 +45,17 @@ export function activate(context: vscode.ExtensionContext) {
             );
         }
 
-        if (event.affectsConfiguration("slm-translation.LM Serve")) {
-            if (lm_serve == "Ollama") t.changeServe(new OllamaClient());
-            else if (lm_serve == "OpenAI") t.changeServe(new OpenaiClient());
+        if (
+            event.affectsConfiguration("slm-translation.Enable Hover Translate")
+        ) {
+            isEnabled = vscode.workspace
+                .getConfiguration("slm-translation")
+                .get("Enable Hover Translate") as boolean;
+
             vscode.window.showInformationMessage(
-                `模型服务已切换为 ${lm_serve}`
+                isEnabled
+                    ? "SLM-Translation: 悬停翻译已启用"
+                    : "SLM-Translation: 悬停翻译已禁用"
             );
         }
 
@@ -108,17 +121,25 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     cmdArr.push(
-        vscode.commands.registerCommand("slm-translation.disable", () => {
-            vscode.window.showInformationMessage("SLM-Translation 已禁用");
-            isEnabled = false;
-        })
+        vscode.commands.registerCommand(
+            "slm-translation.disableHoverTranslate",
+            () => {
+                vscode.workspace
+                    .getConfiguration("slm-translation")
+                    .update("Enable Hover Translate", false, true);
+            }
+        )
     );
 
     cmdArr.push(
-        vscode.commands.registerCommand("slm-translation.enable", () => {
-            vscode.window.showInformationMessage("SLM-Translation 已启用");
-            isEnabled = true;
-        })
+        vscode.commands.registerCommand(
+            "slm-translation.enableHoverTranslate",
+            () => {
+                vscode.workspace
+                    .getConfiguration("slm-translation")
+                    .update("Enable Hover Translate", true, true);
+            }
+        )
     );
 
     cmdArr.push(
@@ -163,7 +184,8 @@ async function translateSelectTextHover(
     if (!editor || !selection || !selection.contains(position)) return;
     const text = editor.document.getText(selection);
     if (text) {
-        let content = await t.translate(text);
+        let content =
+            "**>> SLM-Translation <<**\n\n" + (await t.translate(text));
 
         const markdownString = new vscode.MarkdownString();
         markdownString.appendMarkdown(content);
@@ -175,39 +197,22 @@ async function translateSelectTextHover(
 }
 
 async function translateSelectText() {
-    if (!isEnabled) return;
-
     const editor = vscode.window.activeTextEditor;
     const selection = editor?.selection;
 
     if (!editor || !selection) return;
-
-    const range = new vscode.Range(selection.start, selection.end);
-    const decorationType = vscode.window.createTextEditorDecorationType({
-        color: "red",
-        fontWeight: "bold",
-    });
-
-    editor.setDecorations(decorationType, [range]);
-
-    if (!editor || !selection) return;
     const text = editor.document.getText(selection);
     if (text) {
-        const translatedText = await t.translate(text);
-        editor
-            .edit((editBuilder) => {
-                editBuilder.replace(selection, translatedText);
-            })
-            .then(() => {
-                // Restore to its original state
-                editor.setDecorations(decorationType, []); // Clear the decoration
-            });
+        const resStream = t.translateStream(text);
+
+        for await (const res of resStream) {
+            let htmlContent = await marked.parse(res);
+            provider.show(getWebviewContent(htmlContent));
+        }
     }
 }
 
 async function translateOnPanel() {
-    if (!isEnabled) return;
-
     const editor = vscode.window.activeTextEditor;
     if (!editor) return;
 
@@ -223,47 +228,18 @@ async function translateOnPanel() {
             retainContextWhenHidden: true,
         }
     );
+    let isPanelClosed = false;
 
-    let texts = fullText.split("\n\n").filter((text) => text.trim() !== "");
+    const onDidDisposeDisposable = panel.onDidDispose(() => {
+        isPanelClosed = true;
+    });
 
-    let translatedTexts = await Promise.all(
-        texts.map((text) => t.translate(text))
-    );
+    let resStream = t.translateStream(fullText);
 
-    let content = translatedTexts.join("\n\n");
-    let htmlContent = await marked.parse(content);
-    panel.webview.html = getWebviewContent(htmlContent);
-}
-
-function getWebviewContent(content: string) {
-    return `<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLM Translation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-
-        h1 {
-            color: #333;
-        }
-        
-        div > p {
-            font-size: 18px;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="content">${content}</div>
-</body>
-
-</html>`;
+    for await (const content of resStream) {
+        let htmlContent = await marked.parse(content);
+        if (!isPanelClosed) panel.webview.html = getWebviewContent(htmlContent);
+    }
 }
 
 function changeLanguage() {
@@ -294,8 +270,8 @@ function changeServe() {
 function changeModel() {
     vscode.window
         .showInputBox({
-            placeHolder: "请输入 SLM 模型名称",
-            prompt: "选择或输入 SLM 模型",
+            placeHolder: "请输入 LM 模型名称",
+            prompt: "输入 LM 模型",
             value: "",
         })
         .then((model) => {
@@ -338,4 +314,15 @@ async function namingSelectText() {
                 editor.setDecorations(decorationType, []);
             });
     }
+}
+
+function getWebviewContent(content: string) {
+    const autoScrollScript = `
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    </script>
+    `;
+    return content + autoScrollScript;
 }

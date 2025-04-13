@@ -13,17 +13,17 @@ After ensuring that your configuration is correct:
 -   **Naming Suggestions**: Select the descriptive text, then press the shortcut `shift` + `alt` + `n` or enter `SLM-Translation: Naming` in the command palette.
 -   **Show Translation in Panel**: Enter `SLM-Translation: Translate on Panel` in the command palette to display the translation of the active text in the panel.
 
-| Command                               |                                                                     |
-| ------------------------------------- | ------------------------------------------------------------------- |
-| `SLM-Translation: Enable`             | Enable the feature                                                  |
-| `SLM-Translation: Disable`            | Disable the feature                                                 |
-| `SLM-Translation: Translate`          | Translate the selected text                                         |
-| `SLM-Translation: Translate on Panel` | Display the translation of the active text in the panel             |
-| `SLM-Translation: Naming`             | Provide naming suggestions based on the selected text (description) |
-| `SLM-Translation: Clear Cache`        | Clear the current language cache                                    |
-| `SLM-Translation: Change Language`    | Switch the target language                                          |
-| `SLM-Translation: Change Serve`       | Switch the LM serve                                                 |
-| `SLM-Translation: Change Model`       | Switch the LM model                                                 |
+| Command                                    |                                                                     |
+| ------------------------------------------ | ------------------------------------------------------------------- |
+| `SLM-Translation: Enable Hover Translate`  | Enable hover translation                                            |
+| `SLM-Translation: Disable Hover Translate` | Disable hover translation                                           |
+| `SLM-Translation: Translate`               | Translate the selected text                                         |
+| `SLM-Translation: Translate on Panel`      | Display the translation of the active text in the panel             |
+| `SLM-Translation: Naming`                  | Provide naming suggestions based on the selected text (description) |
+| `SLM-Translation: Clear Cache`             | Clear the current language cache                                    |
+| `SLM-Translation: Change Language`         | Switch the target language                                          |
+| `SLM-Translation: Change Serve`            | Switch the LM serve                                                 |
+| `SLM-Translation: Change Model`            | Switch the LM model                                                 |
 
 | Shortcut              |                     |
 | --------------------- | ------------------- |

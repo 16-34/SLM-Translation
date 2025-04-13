@@ -4,7 +4,7 @@
     "description": "Translating in VSCode with small language models.",
     "publisher": "LueJiang",
     "icon": "icon.png",
-    "version": "0.2.1",
+    "version": "0.3.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/16-34/SLM-Translation"
@@ -22,14 +22,14 @@
     "contributes": {
         "commands": [
             {
-                "command": "slm-translation.enable",
+                "command": "slm-translation.enableHoverTranslate",
                 "category": "SLM-Translation",
-                "title": "Enable"
+                "title": "Enable Hover Translate"
             },
             {
-                "command": "slm-translation.disable",
+                "command": "slm-translation.disableHoverTranslate",
                 "category": "SLM-Translation",
-                "title": "Disable"
+                "title": "Disable Hover Translate"
             },
             {
                 "command": "slm-translation.naming",
@@ -85,6 +85,11 @@
             "type": "object",
             "title": "SLM-Translation",
             "properties": {
+                "slm-translation.Enable Hover Translate": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "是否启用悬停翻译"
+                },
                 "slm-translation.LM Serve": {
                     "type": "string",
                     "enum": [
@@ -97,7 +102,7 @@
                 "slm-translation.Ollama Host": {
                     "type": "string",
                     "default": "http://localhost:11434",
-                    "description": "OLLAMA 服务地址"
+                    "description": "Ollama 服务地址"
                 },
                 "slm-translation.Ollama Model": {
                     "type": "string",
@@ -128,6 +133,16 @@
                     "description": "翻译目标语言"
                 }
             }
+        },
+        "views": {
+            "explorer": [
+                {
+                    "type": "webview",
+                    "id": "slm-translate",
+                    "name": "SLM Translate",
+                    "icon": ""
+                }
+            ]
         }
     },
     "scripts": {

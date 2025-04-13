@@ -4,7 +4,7 @@ import * as vscode from "vscode";
 import { LMBase } from "./base";
 
 export class OpenaiClient extends LMBase {
-    private openai: OpenAI;
+    private _openai: OpenAI;
 
     constructor(
         model: string = vscode.workspace
@@ -18,15 +18,13 @@ export class OpenaiClient extends LMBase {
             .get("OpenAI API Key") as string
     ) {
         super(model);
-        this.openai = new OpenAI({
+        this._openai = new OpenAI({
             baseURL: baseURL,
             apiKey: apiKey,
         });
-        console.log(
-            `OpenAIClient: constructor\n` +
-                `\tmodel: ${model}\n` +
-                `\tbaseURL: ${baseURL}`
-        );
+        console.log(`OpenAIClient: constructor`);
+        console.log(`\tmodel: ${model}`);
+        console.log(`\tbaseURL: ${baseURL}`);
     }
 
     async llmInvoke(
@@ -35,18 +33,57 @@ export class OpenaiClient extends LMBase {
         example: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = []
     ) {
         try {
-            const chatCompletion = await this.openai.chat.completions.create({
+            const chatCompletion = await this._openai.chat.completions.create({
                 messages: [
                     { role: "system", content: sysMsg },
                     ...example,
                     { role: "user", content: text },
                 ],
-                model: this.model,
+                model: this._model,
             });
+
             return chatCompletion.choices[0].message.content as string;
         } catch (err) {
-            console.error(`OpenAIClient: llmInvoke\n` + `\err: ${err}\n`);
-            return "";
+            console.error(`OpenAIClient: llmInvoke`);
+            if (err instanceof OpenAI.APIError) {
+                console.log("\trequest_id", err.request_id);
+                console.log("\tstatus", err.status);
+                console.log("\tname", err.name);
+                console.log("\theaders", err.headers);
+            } else console.error(`\terr: ${err}\n`);
+            throw err;
+        }
+    }
+
+    async *llmStreamInvoke(
+        text: string,
+        sysMsg: string,
+        example: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = []
+    ) {
+        try {
+            const chatCompletion = await this._openai.chat.completions.create({
+                messages: [
+                    { role: "system", content: sysMsg },
+                    ...example,
+                    { role: "user", content: text },
+                ],
+                stream: true,
+                model: this._model,
+            });
+
+            for await (const event of chatCompletion) {
+                const content = event.choices[0]?.delta?.content;
+                if (content) yield content;
+            }
+        } catch (err) {
+            console.error(`OpenAIClient: llmStreamInvoke`);
+            if (err instanceof OpenAI.APIError) {
+                console.log("\trequest_id", err.request_id);
+                console.log("\tstatus", err.status);
+                console.log("\tname", err.name);
+                console.log("\theaders", err.headers);
+            } else console.error(`\terr: ${err}\n`);
+            throw err;
         }
     }
 }
