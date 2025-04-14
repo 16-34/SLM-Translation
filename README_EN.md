@@ -1,7 +1,5 @@
 # SLM-Translation: Using SLM for Translation in VSCode
 
-![example](example.gif)
-
 [Github Repository](https://github.com/16-34/SLM-Translation)
 
 ## How to Use
@@ -9,9 +7,13 @@
 After ensuring that your configuration is correct:
 
 -   **Hover Translation**: Select the text you want to translate, then hover your mouse over the selected part.
+    ![HoverTranslation](./example/HoverTranslation.gif)
 -   **Translate Selection**: Select the text you want to translate, then press the shortcut `shift` + `alt` + `t` or enter `SLM-Translation: Translate` in the command palette.
--   **Naming Suggestions**: Select the descriptive text, then press the shortcut `shift` + `alt` + `n` or enter `SLM-Translation: Naming` in the command palette.
+    ![Translation](./example/Translation.gif)
+-   **Naming Suggestion**: Select the descriptive text, then press the shortcut `shift` + `alt` + `n` or enter `SLM-Translation: Naming` in the command palette.
+    ![NamingSuggestion](./example/NamingSuggestion.gif)
 -   **Show Translation in Panel**: Enter `SLM-Translation: Translate on Panel` in the command palette to display the translation of the active text in the panel.
+    ![TranslateOnPanel](./example/TranslateOnPanel.gif)
 
 | Command                                    |                                                                     |
 | ------------------------------------------ | ------------------------------------------------------------------- |

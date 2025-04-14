@@ -26,7 +26,7 @@ export class OllamaClient extends LMBase {
         console.log(`\thost: ${host}\n`);
     }
 
-    async llmInvoke(
+    async lmInvoke(
         text: string,
         sysMsg: string = "",
         example: Message[] = []
@@ -51,7 +51,7 @@ export class OllamaClient extends LMBase {
         }
     }
 
-    async *llmStreamInvoke(
+    async *lmStreamInvoke(
         text: string,
         sysMsg: string = "",
         example: Message[] = []

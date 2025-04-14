@@ -4,19 +4,19 @@ import * as marked from "marked";
 import { Translator } from "./translator";
 import { OllamaClient } from "./llm/ollama";
 import { OpenaiClient } from "./llm/openai";
-import { viewProvider } from "./view";
+import { ViewProvider } from "./view";
 
 let isEnabled: boolean = vscode.workspace
     .getConfiguration("slm-translation")
     .get("Enable Hover Translate") as boolean;
 let t: Translator;
-let provider: viewProvider;
+let vp: ViewProvider;
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log(">> SLM-Translate << is active!");
+    console.log(">> SLM-Translate << 已激活");
 
-    provider = new viewProvider(context);
-    vscode.window.registerWebviewViewProvider("slm-translate", provider);
+    vp = new ViewProvider(context);
+    vscode.window.registerWebviewViewProvider("slm-translate", vp);
 
     // context.subscriptions.push(
     //     vscode.commands.registerCommand("slm-translation.cmdTest", async () => {
@@ -196,18 +196,38 @@ async function translateSelectTextHover(
     }
 }
 
+let isTranslating: boolean = false;
+let currentStream: AsyncGenerator<string>;
 async function translateSelectText() {
     const editor = vscode.window.activeTextEditor;
     const selection = editor?.selection;
 
     if (!editor || !selection) return;
-    const text = editor.document.getText(selection);
-    if (text) {
-        const resStream = t.translateStream(text);
 
-        for await (const res of resStream) {
-            let htmlContent = await marked.parse(res);
-            provider.show(getWebviewContent(htmlContent));
+    if (isTranslating) {
+        currentStream?.return(0);
+        isTranslating = false;
+    }
+
+    const text = editor.document.getText(selection);
+
+    if (text) {
+        isTranslating = true;
+        currentStream = t.translateStream(text);
+
+        vscode.commands.executeCommand(
+            "workbench.view.extension.slm-translate-panel"
+        );
+
+        try {
+            for await (const res of currentStream) {
+                let htmlContent = await marked.parse(res);
+                vp.show(getWebviewContent(htmlContent));
+            }
+        } catch (error) {
+            console.error("翻译流被异常终止：", error);
+        } finally {
+            isTranslating = false;
         }
     }
 }
@@ -282,7 +302,7 @@ function changeModel() {
 
                 vscode.workspace
                     .getConfiguration("slm-translation")
-                    .update(`${lm_serve} Serve`, model, true);
+                    .update(`${lm_serve} Model`, model, true);
             }
         });
 }
@@ -290,6 +310,7 @@ function changeModel() {
 async function namingSelectText() {
     if (!isEnabled) return;
     const editor = vscode.window.activeTextEditor;
+
     const selection = editor?.selection;
 
     if (!editor || !selection) return;

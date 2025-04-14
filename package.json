@@ -4,7 +4,7 @@
     "description": "Translating in VSCode with small language models.",
     "publisher": "LueJiang",
     "icon": "icon.png",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "repository": {
         "type": "git",
         "url": "https://github.com/16-34/SLM-Translation"
@@ -134,13 +134,22 @@
                 }
             }
         },
+        "viewsContainers": {
+            "panel": [
+                {
+                    "id": "slm-translate-panel",
+                    "title": "SLM Translate",
+                    "icon": "./translate line.svg"
+                }
+            ]
+        },
         "views": {
-            "explorer": [
+            "slm-translate-panel": [
                 {
                     "type": "webview",
                     "id": "slm-translate",
                     "name": "SLM Translate",
-                    "icon": ""
+                    "icon": "./translate line.svg"
                 }
             ]
         }

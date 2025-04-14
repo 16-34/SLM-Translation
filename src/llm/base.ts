@@ -1,10 +1,9 @@
+import * as vscode from "vscode";
+
 /** LM Invoker **/
 export interface LM {
-    llmInvoke(text: string, sysMsg: string): Promise<string>;
-    llmStreamInvoke(
-        text: string,
-        sysMsg: string
-    ): AsyncGenerator<string>;
+    lmInvoke(text: string, sysMsg: string): Promise<string>;
+    lmStreamInvoke(text: string, sysMsg: string): AsyncGenerator<string>;
     changeModel(model: string): void;
 }
 
@@ -13,16 +12,18 @@ export abstract class LMBase implements LM {
 
     constructor(model: string) {
         this._model = model;
+        vscode.window.setStatusBarMessage(this._model);
     }
 
     changeModel(model: string) {
         this._model = model;
+        vscode.window.setStatusBarMessage(this._model);
         console.log(`LMBase: changeModel`);
         console.log(`\tmodel: ${model}\n`);
     }
 
-    abstract llmInvoke(text: string, sysMsg: string): Promise<string>;
-    abstract llmStreamInvoke(
+    abstract lmInvoke(text: string, sysMsg: string): Promise<string>;
+    abstract lmStreamInvoke(
         text: string,
         sysMsg: string
     ): AsyncGenerator<string>;

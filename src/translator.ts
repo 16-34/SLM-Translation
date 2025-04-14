@@ -75,7 +75,7 @@ export class Translator {
 
         this._currentCache.set(hashKey, { isFinished: false, content: "" });
         try {
-            let translatedText: string = await this._lm.llmInvoke(
+            let translatedText: string = await this._lm.lmInvoke(
                 inputText,
                 this._prompts[`TRANSLATE-${this._targetLanguage}`]["SYSTEM_EN"]
             );
@@ -100,7 +100,7 @@ export class Translator {
             yield cacheItem.content;
         } else {
             try {
-                let chunkStream = this._lm.llmStreamInvoke(
+                let chunkStream = this._lm.lmStreamInvoke(
                     inputText,
                     this._prompts[`TRANSLATE-${this._targetLanguage}`][
                         "SYSTEM_EN"
@@ -110,7 +110,6 @@ export class Translator {
                 let translatedText = "";
                 for await (const chunk of chunkStream) {
                     translatedText += chunk;
-                    console.log(translatedText);
                     yield translatedText;
                 }
 
@@ -127,7 +126,7 @@ export class Translator {
     async name(inputText: string) {
         inputText = inputText.trim();
 
-        let translatedText: string = await this._lm.llmInvoke(
+        let translatedText: string = await this._lm.lmInvoke(
             inputText,
             this._prompts["NAME"]["SYSTEM_EN"]
         );

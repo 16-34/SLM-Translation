@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-export class viewProvider implements vscode.WebviewViewProvider {
+export class ViewProvider implements vscode.WebviewViewProvider {
     context: vscode.ExtensionContext;
     private _view?: vscode.WebviewView;
 
@@ -24,7 +24,6 @@ export class viewProvider implements vscode.WebviewViewProvider {
     show(content: string) {
         if (this._view) {
             this._view.webview.html = content;
-            this._view.show(true);
         }
     }
 }

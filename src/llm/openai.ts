@@ -27,7 +27,7 @@ export class OpenaiClient extends LMBase {
         console.log(`\tbaseURL: ${baseURL}`);
     }
 
-    async llmInvoke(
+    async lmInvoke(
         text: string,
         sysMsg: string,
         example: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = []
@@ -55,7 +55,7 @@ export class OpenaiClient extends LMBase {
         }
     }
 
-    async *llmStreamInvoke(
+    async *lmStreamInvoke(
         text: string,
         sysMsg: string,
         example: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = []
