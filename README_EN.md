@@ -7,13 +7,13 @@
 After ensuring that your configuration is correct:
 
 -   **Hover Translation**: Select the text you want to translate, then hover your mouse over the selected part.
-    ![HoverTranslation](./example/HoverTranslation.gif)
+    <img src="./example/HoverTranslation.gif" height=350px>
 -   **Translate Selection**: Select the text you want to translate, then press the shortcut `shift` + `alt` + `t` or enter `SLM-Translation: Translate` in the command palette.
-    ![Translation](./example/Translation.gif)
+    <img src="./example/Translation.gif" height=350px>
 -   **Naming Suggestion**: Select the descriptive text, then press the shortcut `shift` + `alt` + `n` or enter `SLM-Translation: Naming` in the command palette.
-    ![NamingSuggestion](./example/NamingSuggestion.gif)
+    <img src="./example/NamingSuggestion.gif" height=350px>
 -   **Show Translation in Panel**: Enter `SLM-Translation: Translate on Panel` in the command palette to display the translation of the active text in the panel.
-    ![TranslateOnPanel](./example/TranslateOnPanel.gif)
+    <img src="./example/TranslateOnPanel.gif" height=350px>
 
 | Command                                    |                                                                     |
 | ------------------------------------------ | ------------------------------------------------------------------- |
@@ -21,6 +21,7 @@ After ensuring that your configuration is correct:
 | `SLM-Translation: Disable Hover Translate` | Disable hover translation                                           |
 | `SLM-Translation: Translate`               | Translate the selected text                                         |
 | `SLM-Translation: Translate on Panel`      | Display the translation of the active text in the panel             |
+| `SLM-Translation: Translate Clipboard`     | Translate the content of the clipboard                              |
 | `SLM-Translation: Naming`                  | Provide naming suggestions based on the selected text (description) |
 | `SLM-Translation: Clear Cache`             | Clear the current language cache                                    |
 | `SLM-Translation: Change Language`         | Switch the target language                                          |
@@ -30,7 +31,8 @@ After ensuring that your configuration is correct:
 | Shortcut              |                     |
 | --------------------- | ------------------- |
 | `shift` + `alt` + `t` | Translate Selection |
-| `shift` + `alt` + `n` | Naming Suggestions  |
+| `shift` + `alt` + `n` | Naming Suggestion   |
+| `shift` + `alt` + `c` | Translate Clipboard |
 
 ## Requirements
 

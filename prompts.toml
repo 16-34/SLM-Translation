@@ -63,12 +63,12 @@ SYSTEM_EN = '''Your task is to generate appropriate names for variables, functio
 After completion, only output the final names without any additional information.'''
 
 EXAMPLE = [
-    { "role" = "user", "content" = '''存储任务的状态信息的变量，用于跟踪任务的执行进度''' },
+    { "role" = "user", "content" = '''变量：存储任务的状态信息，用于跟踪任务的执行进度''' },
     { "role" = "assistant", content = '''task_status''' },
 
-    { "role" = "user", "content" = '''计算一组数字的平均值的函数''' },
+    { "role" = "user", "content" = '''函数：计算一组数字的平均值''' },
     { "role" = "assistant", content = '''calculateAverage''' },
 
-    { "role" = "user", "content" = '''用于管理用户认证的类，包括登录、登出和密码重置等功能''' },
+    { "role" = "user", "content" = '''类：用于管理用户认证，包括登录、登出和密码重置等功能''' },
     { "role" = "assistant", content = '''UserAuthManager''' },
 ]

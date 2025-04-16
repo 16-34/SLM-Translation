@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Streaming Markdown Webview</title>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe WUI",
+                    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+                    "Droid Sans", "Helvetica Neue", sans-serif;
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script>
+            const vscode = acquireVsCodeApi();
+            window.addEventListener("message", (event) => {
+                const message = event.data;
+                const contentElement = document.getElementById(message.id);
+                contentElement.innerHTML = message.text;
+            });
+        </script>
+    </body>
+</html>

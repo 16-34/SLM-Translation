@@ -1,7 +1,7 @@
-import { Ollama, Message } from "ollama";
+import { Ollama } from "ollama";
 import * as vscode from "vscode";
 
-import { LMBase } from "./base";
+import { LMBase, Message } from "./base";
 
 export class OllamaClient extends LMBase {
     private _ollama: Ollama;
@@ -26,11 +26,7 @@ export class OllamaClient extends LMBase {
         console.log(`\thost: ${host}\n`);
     }
 
-    async lmInvoke(
-        text: string,
-        sysMsg: string = "",
-        example: Message[] = []
-    ) {
+    async lmInvoke(text: string, sysMsg: string = "", example: Message[] = []) {
         try {
             const response = await this._ollama.chat({
                 model: this._model,

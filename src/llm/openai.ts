@@ -1,7 +1,7 @@
 import { OpenAI } from "openai";
 import * as vscode from "vscode";
 
-import { LMBase } from "./base";
+import { LMBase, Message } from "./base";
 
 export class OpenaiClient extends LMBase {
     private _openai: OpenAI;
@@ -27,18 +27,14 @@ export class OpenaiClient extends LMBase {
         console.log(`\tbaseURL: ${baseURL}`);
     }
 
-    async lmInvoke(
-        text: string,
-        sysMsg: string,
-        example: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = []
-    ) {
+    async lmInvoke(text: string, sysMsg: string, example: Message[] = []) {
         try {
             const chatCompletion = await this._openai.chat.completions.create({
                 messages: [
                     { role: "system", content: sysMsg },
                     ...example,
                     { role: "user", content: text },
-                ],
+                ] as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
                 model: this._model,
             });
 
@@ -58,7 +54,7 @@ export class OpenaiClient extends LMBase {
     async *lmStreamInvoke(
         text: string,
         sysMsg: string,
-        example: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = []
+        example: Message[] = []
     ) {
         try {
             const chatCompletion = await this._openai.chat.completions.create({
@@ -66,7 +62,7 @@ export class OpenaiClient extends LMBase {
                     { role: "system", content: sysMsg },
                     ...example,
                     { role: "user", content: text },
-                ],
+                ] as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
                 stream: true,
                 model: this._model,
             });

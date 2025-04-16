@@ -17,13 +17,20 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             enableScripts: true,
             localResourceRoots: [this.context.extensionUri],
         };
-    
+
         this._view = webviewView;
     }
 
     show(content: string) {
+        const autoDownShift = `
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+        </script>
+        `;
         if (this._view) {
-            this._view.webview.html = content;
+            this._view.webview.html = content + autoDownShift;
         }
     }
 }

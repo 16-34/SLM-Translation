@@ -128,7 +128,8 @@ export class Translator {
 
         let translatedText: string = await this._lm.lmInvoke(
             inputText,
-            this._prompts["NAME"]["SYSTEM_EN"]
+            this._prompts["NAME"]["SYSTEM_EN"],
+            this._prompts["NAME"]["EXAMPLE"]
         );
 
         return translatedText;

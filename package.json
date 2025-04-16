@@ -4,7 +4,7 @@
     "description": "Translating in VSCode with small language models.",
     "publisher": "LueJiang",
     "icon": "icon.png",
-    "version": "0.3.2",
+    "version": "0.4.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/16-34/SLM-Translation"
@@ -42,14 +42,19 @@
                 "title": "Translate"
             },
             {
-                "command": "slm-translation.clearCache",
+                "command": "slm-translation.translateClipboard",
                 "category": "SLM-Translation",
-                "title": "Clear Cache"
+                "title": "Translate Clipboard"
             },
             {
                 "command": "slm-translation.translateOnPanel",
                 "category": "SLM-Translation",
                 "title": "Translate on Panel"
+            },
+            {
+                "command": "slm-translation.clearCache",
+                "category": "SLM-Translation",
+                "title": "Clear Cache"
             },
             {
                 "command": "slm-translation.changeLanguage",
@@ -79,6 +84,11 @@
                 "key": "shift+alt+t",
                 "mac": "shift+alt+t",
                 "when": "editorTextFocus"
+            },
+            {
+                "command": "slm-translation.translateClipboard",
+                "key": "shift+alt+c",
+                "mac": "shift+alt+c"
             }
         ],
         "configuration": {
@@ -163,6 +173,7 @@
         "test": "vscode-test"
     },
     "devDependencies": {
+        "@types/jsdom": "^21.1.7",
         "@types/mocha": "^10.0.10",
         "@types/node": "20.x",
         "@types/vscode": "^1.90.0",
@@ -175,6 +186,7 @@
     },
     "dependencies": {
         "@iarna/toml": "^2.2.5",
+        "jsdom": "^26.1.0",
         "marked": "^15.0.7",
         "ollama": "^0.5.14",
         "openai": "^4.91.1"

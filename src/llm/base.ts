@@ -1,9 +1,22 @@
 import * as vscode from "vscode";
 
+export interface Message {
+    role: string;
+    content: string;
+}
+
 /** LM Invoker **/
 export interface LM {
-    lmInvoke(text: string, sysMsg: string): Promise<string>;
-    lmStreamInvoke(text: string, sysMsg: string): AsyncGenerator<string>;
+    lmInvoke(
+        text: string,
+        sysMsg: string,
+        example?: Message[]
+    ): Promise<string>;
+    lmStreamInvoke(
+        text: string,
+        sysMsg: string,
+        example?: Message[]
+    ): AsyncGenerator<string>;
     changeModel(model: string): void;
 }
 
@@ -22,9 +35,15 @@ export abstract class LMBase implements LM {
         console.log(`\tmodel: ${model}\n`);
     }
 
-    abstract lmInvoke(text: string, sysMsg: string): Promise<string>;
+    abstract lmInvoke(
+        text: string,
+        sysMsg: string,
+        example: Message[]
+    ): Promise<string>;
+
     abstract lmStreamInvoke(
         text: string,
-        sysMsg: string
+        sysMsg: string,
+        example: Message[]
     ): AsyncGenerator<string>;
 }

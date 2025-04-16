@@ -1,3 +1,4 @@
+import { JSDOM } from "jsdom";
 import * as vscode from "vscode";
 import * as marked from "marked";
 
@@ -5,6 +6,7 @@ import { Translator } from "./translator";
 import { OllamaClient } from "./llm/ollama";
 import { OpenaiClient } from "./llm/openai";
 import { ViewProvider } from "./view";
+import { getWebViewContent } from "./utils";
 
 let isEnabled: boolean = vscode.workspace
     .getConfiguration("slm-translation")
@@ -98,6 +100,15 @@ export function activate(context: vscode.ExtensionContext) {
             "slm-translation.translate",
             async () => {
                 await translateSelectText();
+            }
+        )
+    );
+
+    cmdArr.push(
+        vscode.commands.registerCommand(
+            "slm-translation.translateClipboard",
+            async () => {
+                await translateClipboard();
             }
         )
     );
@@ -204,14 +215,11 @@ async function translateSelectText() {
 
     if (!editor || !selection) return;
 
-    if (isTranslating) {
-        currentStream?.return(0);
-        isTranslating = false;
-    }
-
     const text = editor.document.getText(selection);
 
     if (text) {
+        if (isTranslating) currentStream?.return(0);
+
         isTranslating = true;
         currentStream = t.translateStream(text);
 
@@ -222,7 +230,32 @@ async function translateSelectText() {
         try {
             for await (const res of currentStream) {
                 let htmlContent = await marked.parse(res);
-                vp.show(getWebviewContent(htmlContent));
+                vp.show(htmlContent);
+            }
+        } catch (error) {
+            console.error("翻译流被异常终止：", error);
+        } finally {
+            isTranslating = false;
+        }
+    }
+}
+
+async function translateClipboard() {
+    const text = await vscode.env.clipboard.readText();
+
+    if (text) {
+        if (isTranslating) currentStream?.return(0);
+        isTranslating = true;
+        currentStream = t.translateStream(text);
+
+        vscode.commands.executeCommand(
+            "workbench.view.extension.slm-translate-panel"
+        );
+
+        try {
+            for await (const res of currentStream) {
+                let htmlContent = await marked.parse(res);
+                vp.show(htmlContent);
             }
         } catch (error) {
             console.error("翻译流被异常终止：", error);
@@ -248,18 +281,43 @@ async function translateOnPanel() {
             retainContextWhenHidden: true,
         }
     );
-    let isPanelClosed = false;
 
-    const onDidDisposeDisposable = panel.onDidDispose(() => {
+    let isPanelClosed = false;
+    panel.onDidDispose(() => {
         isPanelClosed = true;
     });
 
-    let resStream = t.translateStream(fullText);
+    const htmlString: string = getWebViewContent("template/webview.html");
+    const dom = new JSDOM(htmlString);
+    const doc = dom.window.document;
 
-    for await (const content of resStream) {
-        let htmlContent = await marked.parse(content);
-        if (!isPanelClosed) panel.webview.html = getWebviewContent(htmlContent);
+    const container = doc.getElementById("container")!;
+
+    let texts: string[] = fullText
+        .split("\n\n")
+        .filter((text) => text.trim() !== "");
+    for (let i = 0; i < texts.length; i++) {
+        const newChild = doc.createElement("div");
+        container.appendChild(newChild);
+        newChild.id = `content${i}`;
+        newChild.className = "content";
     }
+
+    panel.webview.html = doc.documentElement.outerHTML;
+    await Promise.all(
+        texts.map(async (text, index) => {
+            let resStream = t.translateStream(text);
+
+            for await (const content of resStream) {
+                let htmlContent = await marked.parse(content);
+                if (!isPanelClosed)
+                    panel.webview.postMessage({
+                        id: `content${index}`,
+                        text: htmlContent,
+                    });
+            }
+        })
+    );
 }
 
 function changeLanguage() {
@@ -308,11 +366,8 @@ function changeModel() {
 }
 
 async function namingSelectText() {
-    if (!isEnabled) return;
     const editor = vscode.window.activeTextEditor;
-
     const selection = editor?.selection;
-
     if (!editor || !selection) return;
 
     const range = new vscode.Range(selection.start, selection.end);
@@ -335,15 +390,4 @@ async function namingSelectText() {
                 editor.setDecorations(decorationType, []);
             });
     }
-}
-
-function getWebviewContent(content: string) {
-    const autoScrollScript = `
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            window.scrollTo(0, document.body.scrollHeight);
-        });
-    </script>
-    `;
-    return content + autoScrollScript;
 }
