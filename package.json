@@ -4,7 +4,7 @@
     "description": "Translating in VSCode with small language models.",
     "publisher": "LueJiang",
     "icon": "icon.png",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "repository": {
         "type": "git",
         "url": "https://github.com/16-34/SLM-Translation"
@@ -187,6 +187,7 @@
     "dependencies": {
         "@iarna/toml": "^2.2.5",
         "jsdom": "^26.1.0",
+        "katex": "^0.16.22",
         "marked": "^15.0.7",
         "ollama": "^0.5.14",
         "openai": "^4.91.1"

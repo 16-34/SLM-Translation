@@ -1,4 +1,5 @@
 import { JSDOM } from "jsdom";
+import katex from "katex";
 import * as vscode from "vscode";
 import * as marked from "marked";
 
@@ -7,6 +8,59 @@ import { OllamaClient } from "./llm/ollama";
 import { OpenaiClient } from "./llm/openai";
 import { ViewProvider } from "./view";
 import { getWebViewContent } from "./utils";
+
+// Configure marked to recognize formulas
+marked.use({
+    extensions: [
+        {
+            name: "latex",
+            level: "inline",
+            start(src) {
+                return src.indexOf("$");
+            },
+            tokenizer(src, tokens) {
+                const match = src.match(/^\$+([^$\n]+?)\$+/);
+                if (match) {
+                    return {
+                        type: "latex",
+                        raw: match[0],
+                        formula: match[1].trim(),
+                    };
+                }
+            },
+            renderer(token) {
+                return katex.renderToString(token.formula, {
+                    throwOnError: false,
+                    output: "html",
+                });
+            },
+        },
+        {
+            name: "latexBlock",
+            level: "block",
+            start(src) {
+                return src.indexOf("$$");
+            },
+            tokenizer(src, tokens) {
+                const match = src.match(/^\$\$+\n?([^$]+)\n?\$+$/);
+                if (match) {
+                    return {
+                        type: "latexBlock",
+                        raw: match[0],
+                        formula: match[1].trim(),
+                    };
+                }
+            },
+            renderer(token) {
+                return katex.renderToString(token.formula, {
+                    displayMode: true,
+                    throwOnError: false,
+                    output: "html",
+                });
+            },
+        },
+    ],
+});
 
 let isEnabled: boolean = vscode.workspace
     .getConfiguration("slm-translation")
