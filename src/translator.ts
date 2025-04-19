@@ -62,7 +62,9 @@ export class Translator {
     }
 
     async translate(inputText: string) {
-        inputText = inputText.trim();
+        inputText = `<Text to be translated>
+${inputText.trim()}
+</Text to be translated>`;
 
         const hashKey = this._currentCache.calcHashKey(inputText);
         let cacheItem = this._currentCache.get(hashKey);
@@ -92,7 +94,9 @@ export class Translator {
     }
 
     async *translateStream(inputText: string) {
-        inputText = inputText.trim();
+        inputText = `<Text to be translated>
+${inputText.trim()}
+</Text to be translated>`;
 
         const hashKey = this._currentCache.calcHashKey(inputText);
         let cacheItem = this._currentCache.get(hashKey);

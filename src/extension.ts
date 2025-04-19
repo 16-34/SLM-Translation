@@ -154,21 +154,15 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     cmdArr.push(
-        vscode.commands.registerCommand(
-            "slm-translation.changeServe",
-            async () => {
-                await changeServe();
-            }
-        )
+        vscode.commands.registerCommand("slm-translation.changeServe", () => {
+            changeServe();
+        })
     );
 
     cmdArr.push(
-        vscode.commands.registerCommand(
-            "slm-translation.changeModel",
-            async () => {
-                changeModel();
-            }
-        )
+        vscode.commands.registerCommand("slm-translation.changeModel", () => {
+            changeModel();
+        })
     );
 
     cmdArr.push(
